@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use NotificationChannels\ExpoPushNotifications\ExpoChannel;
+use App\Seller;
 
 class ExpoController extends Controller
 {
@@ -37,6 +38,7 @@ class ExpoController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'expo_token'    =>  'required|string',
+            'seller_token'    => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -49,8 +51,8 @@ class ExpoController extends Controller
         }
 
         $token = $request->get('expo_token');
-
-        $interest = $this->expoChannel->interestName(Auth::user());
+        $seller = Seller::where('token', $request->get('seller_token'))->first();
+        $interest = $this->expoChannel->interestName($seller);
 
         try {
             $this->expoChannel->expo->subscribe($interest, $token);
@@ -78,7 +80,8 @@ class ExpoController extends Controller
      */
     public function unsubscribe(Request $request)
     {
-        $interest = $this->expoChannel->interestName(Auth::user());
+        $seller = Seller::where('token', $request->get('seller_token'))->first();
+        $interest = $this->expoChannel->interestName($seller);
 
         $validator = Validator::make($request->all(), [
             'expo_token'    =>  'sometimes|string',
