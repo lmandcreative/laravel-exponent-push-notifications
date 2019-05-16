@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use NotificationChannels\ExpoPushNotifications\ExpoChannel;
 use App\Seller;
+use NotificationChannels\ExpoPushNotifications\Models\Interest;
 
 class ExpoController extends Controller
 {
@@ -55,6 +56,7 @@ class ExpoController extends Controller
         $interest = $this->expoChannel->interestName($seller);
 
         try {
+            Interest::where('key', $interest)->delete(); //purge old intrests for user before inserting a new one
             $this->expoChannel->expo->subscribe($interest, $token);
         } catch (\Exception $e) {
             return JsonResponse::create([

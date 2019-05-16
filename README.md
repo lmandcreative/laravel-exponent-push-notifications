@@ -102,6 +102,7 @@ class AccountApproved extends Notification
 ### Available Message methods
 
 A list of all available options
+- `title('')`: Accepts a string value for the title.
 - `body('')`: Accepts a string value for the body.
 - `enableSound()`: Enables the notification sound.
 - `disableSound()`: Mutes the notification sound.
