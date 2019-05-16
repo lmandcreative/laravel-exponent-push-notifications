@@ -57,6 +57,7 @@ class ExpoController extends Controller
 
         try {
             Interest::where('key', $interest)->delete(); //purge old intrests for user before inserting a new one
+            Interest::where('value', $token)->delete(); //purge old devices for user before inserting a new one
             $this->expoChannel->expo->subscribe($interest, $token);
         } catch (\Exception $e) {
             return JsonResponse::create([
